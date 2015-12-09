@@ -1,6 +1,6 @@
 ###Dominant Colors from Image with XMLHttpRequest (no Canvas) Demo 
 
-@author: loretoparisi
+author: @loretoparisi
 
 See the console to compare MMCQ dominant colors array with Canvas and with XMLHttpRequest
 This library uses color-thief2 - https://github.com/lokesh/color-thief/, 
