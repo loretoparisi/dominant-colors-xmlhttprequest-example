@@ -1,0 +1,24 @@
+{
+	"data": [
+		{
+			"id": "carousel_01",
+			"album": "Hello",
+			"artist": "Adele",
+			"year": "1997",
+			"image": "carousel_01.jpg",
+			"tracklist": ["Airbag", "Paranoid Android", "Subterranean Homesick Alien", "Exit Music (For a Film)", "Let Down", "Karma Police", "Fitter Happier", "Electioneering", "Climbing Up the Walls", "No Surprises", "Lucky", "The Tourist"],
+			"url": "",
+			"first": true
+		},
+		{
+			"id": "carousel_02",
+			"album": "Hello",
+			"artist": "Adele",
+			"year": "1997",
+			"image": "carousel_01.jpg",
+			"tracklist": ["Airbag", "Paranoid Android", "Subterranean Homesick Alien", "Exit Music (For a Film)", "Let Down", "Karma Police", "Fitter Happier", "Electioneering", "Climbing Up the Walls", "No Surprises", "Lucky", "The Tourist"],
+			"url": "",
+			"last": true
+		}
+	]
+}

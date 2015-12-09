@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title>Dominant Colors with XMLHttpRequest | iTunes Expanding Albums</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Loreto Parisi | Thomas Park">
+	<meta name="description" content="A demo of the iTunes 11 Expanding Albums Effect in HTML, CSS, and JS applying Color Quantization MMCQ with XMLHttpRequest request and no HTML5 canvas">
+	<link rel="stylesheet" href="css/style.css">
+	<style type="text/css">
+
+	</style>
+
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="js/mustache.js"></script>
+	<script src="js/jquery.app-folders.js"></script>
+
+	<!-- Color Quantization Dependencies -->
+	<script src="js/jpg.js"></script>
+	<script src="js/quantize.js"></script>
+	<script src="js/color-thief2.js"></script>
+
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	<script type="text/javascript">
+
+
+	</script>
+
+</head>
+<body>
+	<script type="text/javascript">
+	StopWatch = function()
+	{
+	    this.StartMilliseconds = 0;
+	    this.ElapsedMilliseconds = 0;
+	}
+
+	StopWatch.prototype.Start = function()
+	{
+	    this.StartMilliseconds = new Date().getTime();
+	}
+
+	StopWatch.prototype.Stop = function()
+	{
+	    this.ElapsedMilliseconds = new Date().getTime() - this.StartMilliseconds;
+	}
+	var ColorsHelper = {
+			dominantColors : [],
+			getContrastYIQ : function(color) {
+			    var r = color[0],
+			        g = color[1],
+			        b = color[2];
+
+			    var yiq = ((r*299)+(g*587)+(b*114))/1000;
+
+			    // return (yiq >= 128) ? 'light' : 'dark';
+			    return yiq;
+			}, // getContrastYIQ
+			getDefaultColor : function(yiq){
+			    return (yiq >= 128) ? [0, 0, 0] : [255, 255, 255];
+			}, // getDefaultColor
+			inverseColors : function(color, palette) {
+					var yiq = this.getContrastYIQ(color);
+			    var colors = [],
+			        primaryColor,
+			        secondaryColor;
+
+			    for (var i = 0; i < palette.length; i++) {
+
+			        if (Math.abs(this.getContrastYIQ(palette[i]) - yiq) > 80) {
+			            colors.push(palette[i]);
+			        }
+			    }
+					primaryColor = colors[0] ? colors[0] : this.getDefaultColor(yiq);
+			    secondaryColor = colors[1] ? colors[1] : this.getDefaultColor(yiq);
+					return [primaryColor, secondaryColor];
+			}, // inverseColors
+			styleBackground  : function(color, target) {
+		    color = 'rgb(' + color.join(',') + ')';
+		    $('.' + target)
+		        .css('background-color', color)
+		        .find('.art-wrap').css('box-shadow', 'inset 12px 15px 20px ' + color + ', inset -1px -1px 150px ' + color);
+		    $('style').first().append('#' + target + '::after { border-bottom-color: ' + color + '; }' );
+		}, // styleBackground
+		styleText : function(bg, palette, target) {
+			var colors = this.inverseColors(bg, palette);
+				$('.' + target + ' .primaryColor').css('color', 'rgb(' + colors[0].join(',') + ')');
+		    $('.' + target + ' .secondaryColor').css('color', 'rgb(' + colors[1].join(',') + ')');
+		}, //styleText
+		styleInverseColor : function(bg, palette, target) {
+				var colors = this.inverseColors(bg, palette);
+				$(target).css('color', 'rgb(' + palette.join(',') + ')');
+				$(target).css('background-color', 'rgb(' + colors[0].join(',') + ')');
+		}, //stylePrimaryColor
+		styleColors : function(image, colors) {
+			this.dominantColors = colors;
+			this.styleBackground(colors, image.parent().parent().attr('id'));
+			this.styleText(colors, colors,image.parent().parent().attr('id'));
+		}, //styleColors
+
+		quantize : function(image) {
+			var $image = $(image);
+			var imageSection = $image.closest('.imageSection');
+			var imageURL="/colors2/"+$image.attr('src')
+
+			var colorThief = new ColorThief();
+
+			//////  ColorThief.getColor(image, maxColors)
+			var s1 = new StopWatch();
+			s1.Start();
+			var colors = colorThief.getColor(image, 8);
+			//ColorsHelper.styleColors($image, colors);
+			s1.Stop();
+			var elapsedTime=parseFloat(s1.ElapsedMilliseconds);
+			console.log( "ColorThief.getColor()",
+				$image.parent().parent().attr('id'),
+				colors,
+				elapsedTime/1000+"sec" )
+
+			////// ColorThief.getColorNoCanvas(image, maxColors, callback)
+			var s1 = new StopWatch();
+			s1.Start();
+			colorThief.getColorNoCanvas(imageURL, 350, 350, 8,
+				function(colors) {
+
+				ColorsHelper.styleColors($image, colors);
+
+				$image.bind('click', function(event) {
+
+					s1.Stop();
+					ColorsHelper.styleColors($image, colors);
+
+					var elapsedTime=parseFloat(s1.ElapsedMilliseconds);
+					console.log( "ColorThief.getColorNoCanvas()",
+						$image.parent().parent().attr('id'),
+						colors,
+						elapsedTime/1000+"sec")
+
+					ColorsHelper.styleInverseColor(colors, colors, $(".close"));
+					$(".info a").each(function() {
+						ColorsHelper.styleInverseColor(colors,colors,$(this))
+					})
+
+				});
+
+			}); //ColorThief.getColorNoCanvas
+		},
+
+	} //ColorsHelper
+
+		$(document).ready(function() {
+
+			// Carousel
+			$.ajax({
+				url: "datacarousel.json",
+				dataType: 'json',
+				success: function(data) {
+					var albums = Mustache.to_html($('#albumsc').html(), data);
+					var details = Mustache.to_html($('#detailsc').html(), data);
+					$('.app-folders-container-carousel').html(albums+details);
+
+					$('.app-folders-container-carousel').appFolders({
+						opacity: 1, 								// Opacity of non-selected items
+						marginTopAdjust: true, 						// Adjust the margin-top for the folder area based on row selected?
+						marginTopBase: 0, 							// If margin-top-adjust is "true", the natural margin-top for the area
+						marginTopIncrement: 0,						// If margin-top-adjust is "true", the absolute value of the increment of margin-top per row
+						animationSpeed: 200,						// Time (in ms) for transitions
+						URLrewrite: true, 							// Use URL rewriting?
+						URLbase: "./",						// If URL rewrite is enabled, the URL base of the page where used. Example (include double-quotes): "/services/"
+			      internalLinkSelector: ".jaf-internal a"		// a jQuery selector containing links to content within a jQuery App Folder
+					});
+
+					// For each image:
+					// Once image is loaded, get dominant color and palette and display them.
+					$('.app-icon').bind('load', function (event) {
+							var image = event.target;
+					    ColorsHelper.quantize( image );
+					}); // load
+
+				} //success
+			});
+
+			// App Folders
+			$.ajax({
+				url: "data.json",
+				dataType: 'json',
+				success: function(data) {
+					var albums = Mustache.to_html($('#albums').html(), data);
+					var details = Mustache.to_html($('#details').html(), data);
+					$('.app-folders-container').html(albums+details);
+
+					$('.app-folders-container').appFolders({
+						opacity: 1, 								// Opacity of non-selected items
+						marginTopAdjust: true, 						// Adjust the margin-top for the folder area based on row selected?
+						marginTopBase: 0, 							// If margin-top-adjust is "true", the natural margin-top for the area
+						marginTopIncrement: 0,						// If margin-top-adjust is "true", the absolute value of the increment of margin-top per row
+						animationSpeed: 200,						// Time (in ms) for transitions
+						URLrewrite: true, 							// Use URL rewriting?
+						URLbase: "./",						// If URL rewrite is enabled, the URL base of the page where used. Example (include double-quotes): "/services/"
+			      internalLinkSelector: ".jaf-internal a"		// a jQuery selector containing links to content within a jQuery App Folder
+					});
+
+					// For each image:
+					// Once image is loaded, get dominant color and palette and display them.
+					$('.app-icon').bind('load', function (event) {
+							var image = event.target;
+					    ColorsHelper.quantize( image );
+					}); // load
+
+					} //success
+			});
+		});
+
+	</script>
+
+	<div class="info">
+		<p text-align="center" width="100%" style="font-family:SanSerif;Helvetica;font-size:18px;font-weight:bold;">
+			Dominant Colors from Image with XMLHttpRequest (no Canvas) Demo
+			@author: <a href="http://twitter.com/loretoparisi" style="color:blue">loretoparisi</a>
+		</p>
+		<p text-align="center" width="100%" style="font-family:SanSerif;Helvetica;font-size:13px;font-weight:normal;">
+			See the console to compare MMCQ dominant colors array with Canvas and with XMLHttpRequest<br>
+		</p>
+		<p text-align="center" width="100%" style="font-family:SanSerif;Helvetica;font-size:13px;font-weight:normal;">
+			This library uses <a href="https://github.com/lokesh/color-thief/" style="color:blue">color-thief2</a>,
+			<a href="https://github.com/notmasteryet/jpgjs" style="color:blue">jpg.js</a>
+			<a href="https://gist.github.com/nrabinowitz/1104622"  style="color:blue">Nick Rabinowitz</a>
+			module for color quantization, based on
+			<a href="http://www.leptonica.com/" style="color:blue">Leptonica</a>.
+		</p>
+		<p text-align="center" width="100%" style="font-family:SanSerif;Helvetica;font-size:13px;font-weight:normal;">
+			To get more info read
+			<a href="https://github.com/notmasteryet/jpgjs/issues/40" style="color:blue">Github jpg.js issue</a>,
+			<a href="https://github.com/lokesh/color-thief/issues/86" style="color:blue">Github color-thief issue</a> and
+			<a href="http://stackoverflow.com/questions/33312362/generate-the-dominant-colors-for-an-rgb-image-with-xmlhttprequest/33792749?noredirect=1#comment55355519_33792749"  style="color:blue">Stackoverflow issue</a>
+		</p>
+		<p text-align="center" width="100%" style="font-family:SanSerif;Helvetica;font-size:13px;font-weight:normal;">
+			Original User Interface by
+			<a href="http://thomaspark.co/project/expandingalbums/"  style="color:blue">Thomas Park's iTunes Expanding Albums</a>
+		</p>
+</div>
+
+	<!-- Carousels -->
+	<div class="app-folders-container-carousel">
+		<script id="albumsc" type="text/x-mustache">
+			{{#data}}
+				{{#first}}
+				<div class='jaf-row jaf-container'>
+				{{/first}}
+					<div class='folder' id='{{id}}'>
+						<a href='#'>
+							<img class='app-icon' src='images/{{image}}'>
+							<p class='album-name'>{{album}}</p>
+							<p class='artist-name'>{{artist}}</p>
+						</a>
+					</div>
+				{{#last}}
+					<br class='clear'>
+				</div>
+				{{/last}}
+			{{/data}}
+			</script>
+	</div>
+	<script id="detailsc" type="text/x-mustache">
+		{{#data}}
+			<div class='folderContent {{id}}'>
+				<div class='jaf-container'>
+					<div>
+						<div class='art-wrap'>
+							<img src='images/{{image}}'>
+						</div>
+						<h2><a href="{{url}}" target="_blank" class="primaryColor">{{album}}</a></h2>
+						<h3 class="secondaryColor">{{artist}} ({{year}})</h3>
+						<div class='multi'>
+							<ol class="secondaryColor">
+								{{#tracklist}}
+								<li><a href="{{url}}" target="_blank" class="primaryColor">{{.}}</a></li>
+								{{/tracklist}}
+							</ol>
+						</div>
+					</div>
+					<br class='clear'>
+				</div>
+				<a href="#" class="close">&times;</a>
+			</div>
+		{{/data}}
+	</script>
+
+	<!-- Folders -->
+	<div class="app-folders-container">
+		<script id="albums" type="text/x-mustache">
+			{{#data}}
+				{{#first}}
+				<div class='jaf-row jaf-container'>
+				{{/first}}
+					<div class='folder' id='{{id}}'>
+						<a href='#'>
+							<img class='app-icon' src='images/{{image}}'>
+							<p class='album-name'>{{album}}</p>
+							<p class='artist-name'>{{artist}}</p>
+						</a>
+					</div>
+				{{#last}}
+					<br class='clear'>
+				</div>
+				{{/last}}
+			{{/data}}
+			</script>
+	</div>
+	<script id="details" type="text/x-mustache">
+			{{#data}}
+				<div class='folderContent {{id}}'>
+					<div class='jaf-container'>
+						<div>
+							<div class='art-wrap'>
+								<img src='images/{{image}}'>
+							</div>
+							<h2><a href="{{url}}" target="_blank" class="primaryColor">{{album}}</a></h2>
+							<h3 class="secondaryColor">{{artist}} ({{year}})</h3>
+							<div class='multi'>
+								<ol class="secondaryColor">
+									{{#tracklist}}
+									<li><a href="{{url}}" target="_blank" class="primaryColor">{{.}}</a></li>
+									{{/tracklist}}
+								</ol>
+							</div>
+						</div>
+						<br class='clear'>
+					</div>
+					<a href="#" class="close">&times;</a>
+				</div>
+			{{/data}}
+		</script>
+
+	</div>
+
+	<div class="links">
+	 <a href="https://twitter.com/loretoparisi" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @loretoparisi</a>
+	 <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-via="loretoparisi">Tweet</a>
+ </div>
+
+</body>
+</html>

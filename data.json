@@ -1,0 +1,80 @@
+{
+	"data": [
+		{
+			"id": "okcomputer",
+			"album": "Hello",
+			"artist": "Adele",
+			"year": "1997",
+			"image": "32056701_350_350.jpg",
+			"tracklist": ["Airbag", "Paranoid Android", "Subterranean Homesick Alien", "Exit Music (For a Film)", "Let Down", "Karma Police", "Fitter Happier", "Electioneering", "Climbing Up the Walls", "No Surprises", "Lucky", "The Tourist"],
+			"url": "",
+			"first": true
+		},
+		{
+			"id": "intheaeroplane",
+			"album": "Tennessee Whiskey",
+			"artist": "Chris Stapleton",
+			"year": "1998",
+			"image": "31930294_350_350.jpg",
+			"tracklist": ["The King of Carrot Flowers Pt. One", "The King of Carrot Flowers Pts. Two & Three", "In the Aeroplane Over the Sea", "Two-Headed Boy", "The Fool", "Holland, 1945", "Communist Daughter", "Oh Comely", "Ghost", "*", "Two-Headed Boy Pt. Two"],
+			"url": ""
+		},
+		{
+			"id": "yankeehotelfoxtrot",
+			"album": "Sorry",
+			"artist": "Justin Bieber",
+			"year": "2002",
+			"image": "32055257_350_350.jpg",
+			"tracklist": ["I Am Trying to Break Your Heart", "Kamera", "Radio Cure", "War on War", "Jesus, Etc.", "Ashes of American Flags", "Heavy Metal Drummer", "I'm the Man Who Loves You", "Pot Kettle Black", "Poor Places", "Reservations"],
+			"url": ""
+		},
+		{
+			"id": "sophtwareslump",
+			"album": "The Sophtware Slump",
+			"artist": "Grandaddy",
+			"year": "2000",
+			"image": "26510817_350_350.jpg",
+			"tracklist": ["He's Simple, He's Dumb, He's the Pilot", "Hewlett's Daughter", "Jed the Humanoid", "The Crystal Lake", "Chartsengrafs", "Underneath the Weeping Willow", "Broken Household Appliance National Forest", "Jed's Other Poem (Beautiful Ground)", "E. Knievel Interlude (The Perils of Keeping It Real)", "Miner at the Dial-A-View", "So You'll Aim Toward the Sky"],
+			"url": "",
+			"last": true
+		},
+		{
+			"id": "originofsymmetry",
+			"album": "Stitches",
+			"artist": "Shawn Mendes",
+			"year": "2005",
+			"image": "31404405_350_350.jpg",
+			"tracklist": ["New Born", "Bliss", "Space Dementia", "Hyper Music", "Plug In Baby", "Citizen Erased", "Micro Cuts", "Screenager", "Dark Shines", "Feeling Good", "Megalomania"],
+			"url": "",
+			"first": true
+		},
+		{
+			"id": "yoshimibattlesthepinkrobots",
+			"album": "Like I'm Gonna Lose You",
+			"artist": "Meghan Trainor feat. John Legend",
+			"year": "2002",
+			"image": "30892183_350_350.jpg",
+			"tracklist": ["Fight Test", "One More Robot/Sympathy 3000-21", "Yoshimi Battles the Pink Robots Part 1", "Yoshimi Battles the Pink Robots Part 2", "In the Morning of the Magicians", "Ego Tripping at the Gates of Hell", "Are You a Hypnotist??", "It's Summertime", "Do You Realize??", "All We Have is Now", "Approaching Pavonis Mons by Balloon (Utopia Planitia)"],
+			"url": ""
+		},
+		{
+			"id": "kida",
+			"album": "Kid A",
+			"artist": "Like I'm Gonna Lose You, Meghan Trainor feat. John Legend",
+			"year": "2000",
+			"image": "32040717_350_350.jpg",
+			"tracklist": ["Everything in its Right Place", "Kid A", "The National Anthem", "How to Disappear Completely", "Treefingers", "Optimistic", "In Limbo", "Idioteque", "Morning Bell", "Motion Picture Soundtrack"],
+			"url": ""
+		},
+		{
+			"id": "agaetisbyrjun",
+			"album": "Ágætis byrjun",
+			"artist": "Sigur Rós",
+			"year": "1999",
+			"image": "30867677_350_350.jpg",
+			"tracklist": ["Intro", "Svefn-g-englar", "Starálfur", "Flugufrelsarinn", "Ný batterí", "Hjartað hamast (bamm bamm bamm)", "Viðrar vel til loftárása", "Olsen Olsen", "Ágætis byrjun", "Avalon"],
+			"url": "",
+			"last": true
+		}
+	]
+}
