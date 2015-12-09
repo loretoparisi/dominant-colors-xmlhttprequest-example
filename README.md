@@ -3,6 +3,7 @@
 author: @loretoparisi - https://github.com/loretoparisi, https://twitter.com/loretoparisi
 
 See the console to compare MMCQ dominant colors array with Canvas and with XMLHttpRequest
+
 This library uses color-thief2 - https://github.com/lokesh/color-thief/, 
 
 jpg.js - https://github.com/notmasteryet/jpgjs,
