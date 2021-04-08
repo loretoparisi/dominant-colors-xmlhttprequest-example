@@ -156,9 +156,9 @@
 				url: "datacarousel.json",
 				dataType: 'json',
 				success: function(data) {
-					var albums = Mustache.to_html($('#albumsc').html(), data);
-					var details = Mustache.to_html($('#detailsc').html(), data);
-					$('.app-folders-container-carousel').html(albums+details);
+					//var albums = Mustache.to_html($('#albumsc').html(), data);
+					//var details = Mustache.to_html($('#detailsc').html(), data);
+					//$('.app-folders-container-carousel').html(albums+details);
 
 					$('.app-folders-container-carousel').appFolders({
 						opacity: 1, 								// Opacity of non-selected items
